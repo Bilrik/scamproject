@@ -1,4 +1,4 @@
-package grpci
+package github.com/Bilrik/scamproject
 
 import (
 	"github.com/gin-gonic/gin"

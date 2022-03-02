@@ -1,7 +1,8 @@
 package main
 
 import (
-	"github.com/Bilrik/scamproject/API/grpci"
+	"github.com/Bilrik/scamproject/grpci"
+
 	"github.com/gin-gonic/gin"
 )
 

@@ -1,21 +1,17 @@
-package github.com/Bilrik/scamproject
+package grpci
 
 import (
 	"github.com/gin-gonic/gin"
 )
 
-func GetBooks(c *fiber.Ctx) {
-	c.Send("All books")
+func calls(c *gin.Context) {
+	c.SEND()
 }
 
-func GetBook(c *fiber.Ctx) {
-	c.Send("A single book")
+func batch(c *gin.Context) {
+	c.SEND("A single book")
 }
 
-func NewBook(c *fiber.Ctx) {
-	c.Send("create new book")
-}
-
-func DeleteBook(c *fiber.Ctx) {
-	c.Send("delete book")
+func update(c *gin.Context) {
+	c.SEND("update")
 }

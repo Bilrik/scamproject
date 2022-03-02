@@ -1,0 +1,41 @@
+syntax = "proto3";
+
+package scam;
+
+option go_package = "./scam+pb";
+
+message AddPhoneNumberRequest {
+    string number = 1;
+    string category_Code = 2;
+    string category_Name = 3;
+    repeated string BlockedANumbers = 4;
+    repeated string BlockedCategories = 5;
+}
+
+message AddPhoneNumberResponse{
+    bool success = 1;
+}
+
+message GetPhoneCategoryRequest {
+    string PhoneNumber = 1;
+}
+
+message GetPhoneCategoryResponse {
+    string CategoryCode = 1;
+    string CategoryName = 2;
+}
+
+message GetPersonalBlocklistRequest {
+    string PhoneNumber = 1;
+}
+
+message GetPersonalBlocklistResponse {
+    repeated string BlockedANumbers = 1;
+    repeated string BlockedCategories= 2 ;
+}
+
+service ScamDatabase{
+    rpc getPhoneCategory(GetPhoneCategoryRequest) returns GetPhoneCategoryResponse;
+    rpc GetPersonalBlocklist(GetPersonalBlocklistRequest)returns GetPersonalBlocklistResponse;
+    rpc AddPhoneNumber(AddPhoneNumberRequest) returns AddPhoneNumberResponse;
+}

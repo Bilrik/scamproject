@@ -2,7 +2,7 @@ syntax = "proto3";
 
 package scam;
 
-option go_package = "./scam+pb";
+option go_package = "./scampb";
 
 message AddPhoneNumberRequest {
     string number = 1;
@@ -35,7 +35,7 @@ message GetPersonalBlocklistResponse {
 }
 
 service ScamDatabase{
-    rpc getPhoneCategory(GetPhoneCategoryRequest) returns GetPhoneCategoryResponse;
-    rpc GetPersonalBlocklist(GetPersonalBlocklistRequest)returns GetPersonalBlocklistResponse;
-    rpc AddPhoneNumber(AddPhoneNumberRequest) returns AddPhoneNumberResponse;
+    rpc getPhoneCategory(GetPhoneCategoryRequest) returns (GetPhoneCategoryResponse);
+    rpc GetPersonalBlocklist(GetPersonalBlocklistRequest)returns (GetPersonalBlocklistResponse);
+    rpc AddPhoneNumber(AddPhoneNumberRequest) returns (AddPhoneNumberResponse);
 }

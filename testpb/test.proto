@@ -1,0 +1,30 @@
+syntax = "proto3";
+
+package Test;
+option go_package="./testpb";
+
+message IsValid {
+     string Number = 1;
+}
+message IsValidrequest{
+    IsValid valid = 1;
+}
+
+message IsValidresponse{
+    bool result = 1;
+}
+
+message IsValidListrequest{
+    IsValid valid = 1;
+}
+
+message IsValidListresponse{
+    bool valid = 1;
+}
+
+service TestService{
+    //Unary
+    rpc Valid(IsValidrequest) returns (IsValidresponse) {};
+    //Client stream
+    rpc ValidList(stream IsValidListrequest) returns (IsValidListresponse) {};
+}

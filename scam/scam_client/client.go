@@ -3,10 +3,9 @@ package main
 import (
 	"context"
 	"fmt"
-	"io"
 	"log"
+	"scamProtec/scam/scampb"
 
-	"github.com/simplesteph/grpc-go-course/blog/blogpb"
 	"google.golang.org/grpc"
 )
 
@@ -22,73 +21,75 @@ func main() {
 	}
 	defer cc.Close() // Maybe this should be in a separate function and the error handled?
 
-	c := blogpb.NewBlogServiceClient(cc)
+	c := scampb.NewScamDatabaseClient(cc)
 
 	// create Blog
-	fmt.Println("Creating the blog")
-	blog := &blogpb.Blog{
-		AuthorId: "Stephane",
-		Title:    "My First Blog",
-		Content:  "Content of the first blog",
+	fmt.Println("Adding Numbers")
+	PhoneNumbers := &scampb.AddPhoneNumberRequest{
+		Number:            "5013398428",
+		Category_Code:     "PN",
+		Category_Name:     "Personal_Number",
+		BlockedANumbers:   append(make([]string, 1), "6666666666", "5555555555", "5555555556"),
+		BlockedCategories: append(make([]string, 1), "gp", "wq"),
+		Score:             7,
 	}
-	createBlogRes, err := c.CreateBlog(context.Background(), &blogpb.CreateBlogRequest{Blog: blog})
+	createPhoneNumberRes, err := c.AddPhoneNumber(context.Background(), PhoneNumbers)
 	if err != nil {
 		log.Fatalf("Unexpected error: %v", err)
 	}
-	fmt.Printf("Blog has been created: %v", createBlogRes)
-	blogID := createBlogRes.GetBlog().GetId()
+	fmt.Printf("Phone Number has been created: %v", createPhoneNumberRes)
 
-	// read Blog
-	fmt.Println("Reading the blog")
+	// // read Blog
+	// fmt.Println("Reading the blog")
 
-	_, err2 := c.ReadBlog(context.Background(), &blogpb.ReadBlogRequest{BlogId: "5bdc29e661b75adcac496cf4"})
-	if err2 != nil {
-		fmt.Printf("Error happened while reading: %v \n", err2)
-	}
+	// _, err2 := c.ReadBlog(context.Background(), &blogpb.ReadBlogRequest{BlogId: "5bdc29e661b75adcac496cf4"})
+	// if err2 != nil {
+	// 	fmt.Printf("Error happened while reading: %v \n", err2)
+	// }
 
-	readBlogReq := &blogpb.ReadBlogRequest{BlogId: blogID}
-	readBlogRes, readBlogErr := c.ReadBlog(context.Background(), readBlogReq)
-	if readBlogErr != nil {
-		fmt.Printf("Error happened while reading: %v \n", readBlogErr)
-	}
+	// readBlogReq := &blogpb.ReadBlogRequest{BlogId: blogID}
+	// readBlogRes, readBlogErr := c.ReadBlog(context.Background(), readBlogReq)
+	// if readBlogErr != nil {
+	// 	fmt.Printf("Error happened while reading: %v \n", readBlogErr)
+	// }
 
-	fmt.Printf("Blog was read: %v \n", readBlogRes)
+	// fmt.Printf("Blog was read: %v \n", readBlogRes)
 
-	// update Blog
-	newBlog := &blogpb.Blog{
-		Id:       blogID,
-		AuthorId: "Changed Author",
-		Title:    "My First Blog (edited)",
-		Content:  "Content of the first blog, with some awesome additions!",
-	}
-	updateRes, updateErr := c.UpdateBlog(context.Background(), &blogpb.UpdateBlogRequest{Blog: newBlog})
-	if updateErr != nil {
-		fmt.Printf("Error happened while updating: %v \n", updateErr)
-	}
-	fmt.Printf("Blog was updated: %v\n", updateRes)
+	// // update Blog
+	// newBlog := &blogpb.Blog{
+	// 	Id:       blogID,
+	// 	AuthorId: "Changed Author",
+	// 	Title:    "My First Blog (edited)",
+	// 	Content:  "Content of the first blog, with some awesome additions!",
+	// }
+	// updateRes, updateErr := c.UpdateBlog(context.Background(), &blogpb.UpdateBlogRequest{Blog: newBlog})
+	// if updateErr != nil {
+	// 	fmt.Printf("Error happened while updating: %v \n", updateErr)
+	// }
+	// fmt.Printf("Blog was updated: %v\n", updateRes)
 
-	// delete Blog
-	deleteRes, deleteErr := c.DeleteBlog(context.Background(), &blogpb.DeleteBlogRequest{BlogId: blogID})
+	// // delete Blog
+	// deleteRes, deleteErr := c.DeleteBlog(context.Background(), &blogpb.DeleteBlogRequest{BlogId: blogID})
 
-	if deleteErr != nil {
-		fmt.Printf("Error happened while deleting: %v \n", deleteErr)
-	}
-	fmt.Printf("Blog was deleted: %v \n", deleteRes)
+	// if deleteErr != nil {
+	// 	fmt.Printf("Error happened while deleting: %v \n", deleteErr)
+	// }
+	// fmt.Printf("Blog was deleted: %v \n", deleteRes)
 
-	// list Blogs
+	// // list Blogs
 
-	stream, err := c.ListBlog(context.Background(), &blogpb.ListBlogRequest{})
-	if err != nil {
-		log.Fatalf("error while calling ListBlog RPC: %v", err)
-	}
-	for {
-		res, err := stream.Recv()
-		if err == io.EOF {
-			break
-		}
-		if err != nil {
-			log.Fatalf("Something happened: %v", err)
-		}
-		fmt.Println(res.GetBlog())
-	}
+	// stream, err := c.ListBlog(context.Background(), &blogpb.ListBlogRequest{})
+	// if err != nil {
+	// 	log.Fatalf("error while calling ListBlog RPC: %v", err)
+	// }
+	// for {
+	// 	res, err := stream.Recv()
+	// 	if err == io.EOF {
+	// 		break
+	// 	}
+	// 	if err != nil {
+	// 		log.Fatalf("Something happened: %v", err)
+	// 	}
+	// 	fmt.Println(res.GetBlog())
+	//}
 }

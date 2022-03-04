@@ -25,6 +25,7 @@ type ScamDatabaseClient interface {
 	GetPhoneCategory(ctx context.Context, in *GetPhoneCategoryRequest, opts ...grpc.CallOption) (*GetPhoneCategoryResponse, error)
 	GetPersonalBlocklist(ctx context.Context, in *GetPersonalBlocklistRequest, opts ...grpc.CallOption) (*GetPersonalBlocklistResponse, error)
 	AddPhoneNumber(ctx context.Context, in *AddPhoneNumberRequest, opts ...grpc.CallOption) (*AddPhoneNumberResponse, error)
+	GetScore(ctx context.Context, in *GetScoreRequest, opts ...grpc.CallOption) (*GetScoreResponse, error)
 }
 
 type scamDatabaseClient struct {
@@ -62,6 +63,15 @@ func (c *scamDatabaseClient) AddPhoneNumber(ctx context.Context, in *AddPhoneNum
 	return out, nil
 }
 
+func (c *scamDatabaseClient) GetScore(ctx context.Context, in *GetScoreRequest, opts ...grpc.CallOption) (*GetScoreResponse, error) {
+	out := new(GetScoreResponse)
+	err := c.cc.Invoke(ctx, "/scam.ScamDatabase/GetScore", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // ScamDatabaseServer is the server API for ScamDatabase service.
 // All implementations must embed UnimplementedScamDatabaseServer
 // for forward compatibility
@@ -69,6 +79,7 @@ type ScamDatabaseServer interface {
 	GetPhoneCategory(context.Context, *GetPhoneCategoryRequest) (*GetPhoneCategoryResponse, error)
 	GetPersonalBlocklist(context.Context, *GetPersonalBlocklistRequest) (*GetPersonalBlocklistResponse, error)
 	AddPhoneNumber(context.Context, *AddPhoneNumberRequest) (*AddPhoneNumberResponse, error)
+	GetScore(context.Context, *GetScoreRequest) (*GetScoreResponse, error)
 	mustEmbedUnimplementedScamDatabaseServer()
 }
 
@@ -84,6 +95,9 @@ func (UnimplementedScamDatabaseServer) GetPersonalBlocklist(context.Context, *Ge
 }
 func (UnimplementedScamDatabaseServer) AddPhoneNumber(context.Context, *AddPhoneNumberRequest) (*AddPhoneNumberResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method AddPhoneNumber not implemented")
+}
+func (UnimplementedScamDatabaseServer) GetScore(context.Context, *GetScoreRequest) (*GetScoreResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetScore not implemented")
 }
 func (UnimplementedScamDatabaseServer) mustEmbedUnimplementedScamDatabaseServer() {}
 
@@ -152,6 +166,24 @@ func _ScamDatabase_AddPhoneNumber_Handler(srv interface{}, ctx context.Context, 
 	return interceptor(ctx, in, info, handler)
 }
 
+func _ScamDatabase_GetScore_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetScoreRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ScamDatabaseServer).GetScore(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/scam.ScamDatabase/GetScore",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ScamDatabaseServer).GetScore(ctx, req.(*GetScoreRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // ScamDatabase_ServiceDesc is the grpc.ServiceDesc for ScamDatabase service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -170,6 +202,10 @@ var ScamDatabase_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "AddPhoneNumber",
 			Handler:    _ScamDatabase_AddPhoneNumber_Handler,
+		},
+		{
+			MethodName: "GetScore",
+			Handler:    _ScamDatabase_GetScore_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

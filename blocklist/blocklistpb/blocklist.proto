@@ -1,0 +1,30 @@
+syntax = "proto3";
+
+package blocklist;
+
+option go_package = "./blocklistpb";
+
+message metadata{
+    string category = 1;
+}
+
+message ScoreEventRequest {
+    string event_id = 1;
+    string a_number = 2;
+    string b_number = 3;
+    int64 call_time = 4;
+    string sip_invite = 5;
+}
+
+message ScoreEventResponse{
+    string event_id = 1;
+    bool block_call = 2;
+    bool is_scam = 3;
+    int32 score = 4;
+    metadata metadata = 5;
+}
+
+service BlocklistService{
+    rpc ScoreEvent(ScoreEventRequest) returns (ScoreEventResponse);
+    rpc ScoreEvents(stream ScoreEventRequest) returns (stream ScoreEventResponse);
+}

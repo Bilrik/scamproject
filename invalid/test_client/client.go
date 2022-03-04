@@ -4,7 +4,7 @@ import (
 	"context"
 	"fmt"
 	"log"
-	"myapp/Golang/grpc/Test/testpb"
+	"scamProtec/invalid/testpb"
 
 	"google.golang.org/grpc"
 )

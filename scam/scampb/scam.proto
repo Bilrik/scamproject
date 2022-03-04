@@ -10,6 +10,7 @@ message AddPhoneNumberRequest {
     string category_Name = 3;
     repeated string BlockedANumbers = 4;
     repeated string BlockedCategories = 5;
+    int32 score = 6;
 }
 
 message AddPhoneNumberResponse{
@@ -34,8 +35,17 @@ message GetPersonalBlocklistResponse {
     repeated string BlockedCategories= 2 ;
 }
 
+message GetScoreRequest{
+    string PhoneNumber = 1;
+}
+
+message GetScoreResponse{
+    int32 Score = 1;
+}
+
 service ScamDatabase{
     rpc getPhoneCategory(GetPhoneCategoryRequest) returns (GetPhoneCategoryResponse);
     rpc GetPersonalBlocklist(GetPersonalBlocklistRequest)returns (GetPersonalBlocklistResponse);
     rpc AddPhoneNumber(AddPhoneNumberRequest) returns (AddPhoneNumberResponse);
+    rpc GetScore(GetScoreRequest) returns (GetScoreResponse);
 }
